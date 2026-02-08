@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:black;
+  color:white;
+  font-family:'Segoe UI',sans-serif;
+  overflow:hidden;
+}
+
+/* screens */
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+.hidden{display:none;}
+
+h1{
+  text-shadow:0 0 12px white;
+}
+
+/* buttons */
+button{
+  padding:14px 32px;
+  font-size:20px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  margin:10px;
+}
+
+.yes{
+  background:white;
+  color:black;
+  box-shadow:0 0 20px white;
+}
+
+.no{
+  background:#333;
+  color:white;
+}
+
+/* image */
+img{
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid white;
+  box-shadow:0 0 20px white;
+  margin-bottom:20px;
+}
+
+/* stars */
+.star{
+  position:fixed;
+  background:white;
+  border-radius:50%;
+  opacity:.8;
+  animation:twinkle 2s infinite alternate;
+}
+@keyframes twinkle{
+  from{opacity:.3}
+  to{opacity:1}
+}
+
+/* text box */
+.box{
+  background:rgba(0,0,0,.85);
+  border:1px solid rgba(255,255,255,.2);
+  padding:25px;
+  border-radius:20px;
+  max-width:780px;
+  max-height:65vh;
+  overflow-y:auto;
+}
+
+.line{
+  opacity:0;
+  animation:fade 1s forwards;
+  font-size:20px;
+  line-height:1.7;
+  text-shadow:0 0 6px rgba(255,255,255,.4);
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(12px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* hearts explosion */
+.heart{
+  position:fixed;
+  font-size:26px;
+  animation:explode 2.5s linear forwards;
+}
+@keyframes explode{
+  from{transform:translate(0,0) scale(1);opacity:1;}
+  to{
+    transform:
+      translate(calc(-120px + 240px * var(--x)),
+                calc(-120px + 240px * var(--y)))
+      scale(0.4);
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="screen" id="intro">
+  <img src="kruthik.jpg">
+  <h1>Valentine’s Day ❤️</h1>
+  <button class="yes" onclick="start()">YES ❤️</button>
+</div>
+
+<!-- STORY -->
+<div class="screen hidden" id="storyScreen">
+  <div class="box" id="story"></div>
+  <button class="yes" onclick="showProposal()">Next ❤️</button>
+</div>
+
+<!-- PROPOSAL -->
+<div class="screen hidden" id="proposal">
+  <h1>Will you be my Valentine? 💍❤️</h1>
+  <div>
+    <button class="yes" onclick="accept()">YES 💖</button>
+    <button class="no" id="noBtn" onclick="moveNo()" onmouseover="moveNo()">NO 🙈</button>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div class="screen hidden" id="final">
+  <h1>I LOVE YOU 💖💋</h1>
+  <p style="font-size:22px;">Forever yours, Nana 🫂❤️</p>
+</div>
+
+<audio id="music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+
+<script>
+/* stars */
+for(let i=0;i<120;i++){
+  let s=document.createElement("div");
+  s.className="star";
+  s.style.width=s.style.height=(Math.random()*2+1)+"px";
+  s.style.top=Math.random()*100+"vh";
+  s.style.left=Math.random()*100+"vw";
+  s.style.animationDuration=(1+Math.random()*2)+"s";
+  document.body.appendChild(s);
+}
+
+/* story lines (YOUR TEXT ADDED 💙) */
+const lines=[
+"Hey my love 🥰",
+"It’s incredible to think about how our journey began on Snapchat…",
+"and now we are almost a year together in this beautiful virtual love story of ours.",
+"Every chat, every silly snap, every little moment we’ve shared…",
+"has filled my heart with so much happiness and warmth.",
+"Even though we haven’t met in person yet…",
+"it feels like I’ve known you forever.",
+"You are not just my boyfriend…",
+"you are my safe place, my dream come true, my everything ❤️",
+"Every time you call me ‘nana’ or send me a message…",
+"I feel a joy that words can’t describe.",
+"You’ve made my days brighter…",
+"my nights softer…",
+"and my world infinitely more beautiful.",
+"I love you so, so much Kruthik ❤️",
+"",
+"Hmmmm… mana video call gurthundha…",
+"nenu nee meedha kopam ga unna time lo…",
+"nuvvu adigina aa sorry…",
+"Aa sorry entha cute ga undho telusa…",
+"aa kshanam lo malli ninnu premistunna ani anipinchindhi 🥹",
+"Naku nuvvu kaavali… chala kaavali…",
+"Life ni nee lekunda imagine cheyalenu 🫂",
+"Please nannu vadileyaku…",
+"Nuvvu naa husband… naa matrame sontham…",
+"Forever yours… Nana 💋"
+];
+
+function start(){
+  intro.classList.add("hidden");
+  storyScreen.classList.remove("hidden");
+  music.play();
+
+  lines.forEach((t,i)=>{
+    let p=document.createElement("p");
+    p.className="line";
+    p.style.animationDelay=(i*1.5)+"s";
+    p.innerText=t;
+    story.appendChild(p);
+  });
+}
+
+function showProposal(){
+  storyScreen.classList.add("hidden");
+  proposal.classList.remove("hidden");
+}
+
+/* NO button runs */
+function moveNo(){
+  const btn=document.getElementById("noBtn");
+  btn.style.position="absolute";
+  btn.style.left=Math.random()*(window.innerWidth-btn.offsetWidth)+"px";
+  btn.style.top=Math.random()*(window.innerHeight-btn.offsetHeight)+"px";
+}
+
+/* YES action */
+function accept(){
+  proposal.classList.add("hidden");
+  final.classList.remove("hidden");
+
+  for(let i=0;i<40;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💖";
+    h.style.left="50vw";
+    h.style.top="50vh";
+    h.style.setProperty("--x",Math.random());
+    h.style.setProperty("--y",Math.random());
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2500);
+  }
+}
+</script>
+
+</body>
+  </html>
